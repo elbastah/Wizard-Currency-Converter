@@ -1,0 +1,73 @@
+import java.util.Scanner;
+public class WizardCurrency {
+	
+	public static final int SICKLES_IN_A_GALLEON = 17;
+	public static final int KNUTS_IN_A_SICKLE = 29;
+	public static final int KNUTS_IN_A_GALLEON = 493;
+	public static final double KNUTS_IN_A_PENCE = 1.627254509;
+	public static final int PENCE_IN_A_POUND = 100;
+	public static final double PENCE_IN_A_KNUT = 0.6145320197; 
+	
+	public static int convertGBPToKnuts(int pounds, int pence) {
+		int totalPence = (pounds * PENCE_IN_A_POUND) + pence;
+		double convertedToKnuts = Math.round(totalPence / PENCE_IN_A_KNUT);
+		return (int)convertedToKnuts;
+	}
+	public static String convertKnutsToWizardingCurrency(int totalKnuts) {
+		int galleons = totalKnuts / KNUTS_IN_A_GALLEON; 
+		totalKnuts -= galleons * KNUTS_IN_A_GALLEON;
+		int sickles = totalKnuts / KNUTS_IN_A_SICKLE;
+		int knuts = totalKnuts % KNUTS_IN_A_SICKLE;
+		return "HP" + galleons + ":" + sickles + ":" + knuts;
+	}
+	public static String convertGBPToWizardingCurrency(int pounds, int pence) {
+		int convertedToKnuts = convertGBPToKnuts(pounds, pence);
+		String currencyString = convertKnutsToWizardingCurrency(convertedToKnuts);
+		return currencyString;
+	}
+	public static int convertWizardingCurrencyToKnuts(int numGalleons, int numSickles, int numKnuts) {
+		int totalKnuts = numGalleons * KNUTS_IN_A_GALLEON;
+		totalKnuts += numSickles * KNUTS_IN_A_SICKLE;
+		totalKnuts += numKnuts;
+		return totalKnuts;
+	}
+	public static int convertWizardingCurrencyToPence(int numGalleons, int numSickles, int numKnuts) {
+		int currencyInKnuts = convertWizardingCurrencyToKnuts(numGalleons, numSickles, numKnuts);
+		double knutsToPence = Math.round(currencyInKnuts / KNUTS_IN_A_PENCE);
+		return (int)knutsToPence;
+	}
+	public static double getNumberFromUser(String prompt, String errorMessage, Scanner input, boolean integerRequired) {
+		System.out.println(prompt);
+		if (integerRequired)
+		{
+			if (input.hasNextInt())
+			{
+				double userInput = input.nextInt();
+				return userInput;
+			}
+			else
+			{
+				System.out.println(errorMessage); 
+				input.next();
+				double userInput = getNumberFromUser(prompt, errorMessage, input, integerRequired);
+				return userInput;
+			}		
+		}
+		else 
+		{
+			if (input.hasNextDouble())
+			{
+				double userInput = input.nextDouble();
+				return userInput;
+			}
+			else
+			{
+				System.out.println(errorMessage); 
+				input.next();
+				double userInput = getNumberFromUser(prompt, errorMessage, input, integerRequired);
+				return userInput;
+				
+			}
+		}
+	}
+}
