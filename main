@@ -1,0 +1,68 @@
+public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		boolean quit = false;
+		String initialPrompt = "\n1. Convert Wizarding Currency To GBP \n2. Convert"
+				+ " Knuts To Wizarding Currency and GBP \n3. Convert GBP to "
+				+ "Wizarding Currency \n4. Quit \nSelect function> ";
+		String galleonPrompt = "Enter the number of Galleons >";
+		String sicklePrompt = "Enter the number of Sickles >";
+		String knutPrompt = "Enter the number of Knuts >";
+		String gbpPrompt = "Enter the number of British pounds and pence (e.g. 1.24) >";
+		while (!quit) 
+		{
+			int displayMenuChoice = (int)getNumberFromUser(initialPrompt, "Error: Invalid selection.", input, true);
+			switch (displayMenuChoice) {
+			case 1:
+				int galleon = (int)getNumberFromUser(galleonPrompt, "Error: The number of Galleons should be "
+						+ "an integer (e.g. 3)",
+						input, true);
+				int sickle = (int)getNumberFromUser(sicklePrompt, "Error: The number of Sickles should be an "
+						+ "integer (e.g. 5)",
+						input, true);
+				int knut = (int)getNumberFromUser(knutPrompt, "Error: The number of Knuts should be an integer "
+						+ "(e.g. 12)",
+						input, true);
+				int convertToKnuts = convertWizardingCurrencyToKnuts(galleon, sickle, knut);
+				String knutsToWizardMoney = convertKnutsToWizardingCurrency(convertToKnuts);
+				System.out.println("In British Pounds " + knutsToWizardMoney + " is GBP" + 
+						((double)convertWizardingCurrencyToPence(galleon, sickle, knut)/PENCE_IN_A_POUND));
+				break;
+			case 2:
+				int totalKnuts = (int)getNumberFromUser(knutPrompt, "Error: The number of Knuts should be "
+						+ "an integer (e.g. 56)",
+						input, true);
+				String knutsToWiz = convertKnutsToWizardingCurrency(totalKnuts);
+				String[] splitHPFromKnutsToWiz = knutsToWiz.split("HP");
+				String[] splitGalleonsFromSicklesFromKnuts = splitHPFromKnutsToWiz[1].split(":");
+				int galleonsSplit = 0;
+				int sicklesSplit = 0;
+				int knutsSplit = 0;
+				for (int index=0; (index<splitGalleonsFromSicklesFromKnuts.length); index++)
+				{
+					if (index==0)
+						galleonsSplit = Integer.parseInt(splitGalleonsFromSicklesFromKnuts[0]);
+					else if (index==1)
+						sicklesSplit = Integer.parseInt(splitGalleonsFromSicklesFromKnuts[1]);
+					else
+						knutsSplit = Integer.parseInt(splitGalleonsFromSicklesFromKnuts[2]);
+				}
+				System.out.println("" + totalKnuts + " knuts is " + knutsToWiz + " is equal to GBP" + 
+						((double)convertWizardingCurrencyToPence(galleonsSplit, sicklesSplit, knutsSplit)/PENCE_IN_A_POUND));
+				break;
+			case 3:
+				double poundFull = getNumberFromUser(gbpPrompt, "Error: Invalid number of British pounds and pence ",
+						input, false);
+				int pound = (int)poundFull;
+				int pence = (int)(poundFull * PENCE_IN_A_POUND)- (pound * PENCE_IN_A_POUND);
+				System.out.println("In wizarding currency GBP" + poundFull + " is " + 
+						convertGBPToWizardingCurrency(pound, pence));
+				break;
+			case 4:
+				quit = true;
+				input.close();
+				break;
+			default:
+				System.out.println("Error: Invalid selection.");
+			}
+		}
+	}
